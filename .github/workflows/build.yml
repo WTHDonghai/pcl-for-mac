@@ -6,8 +6,11 @@ on:
       build_configuration:
         description: Build Configuration
         required: false
-        type: string
-        default: Release
+        type: choice
+        options:
+          - Debug
+          - Release
+        default: Debug
       upload_artifact:
         description: Upload artifact
         required: false
@@ -18,7 +21,7 @@ on:
       build_configuration:
         required: false
         type: string
-        default: Release
+        default: Debug
       upload_artifact:
         required: false
         type: boolean
@@ -54,9 +57,10 @@ jobs:
           EOF
 
       - name: Import codesign cert
-        if: ${{ inputs.build_configuration == 'Release' }}
+        if: ${{ inputs.build_configuration == 'Release' && env.HAS_CERTIFICATE == 'true' }}
         uses: apple-actions/import-codesign-certs@v7
-        continue-on-error: true
+        env:
+          HAS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE != '' }}
         with:
           p12-file-base64: ${{ secrets.MACOS_CERTIFICATE }}
           p12-password: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
@@ -72,7 +76,7 @@ jobs:
             -archivePath build
           )
 
-          if [ "${{ inputs.build_configuration }}" = "Release" ]; then
+          if [ "${{ inputs.build_configuration }}" = "Release" ] && [ -n "${{ secrets.MACOS_SIGNING_IDENTITY }}" ]; then
             xcodebuild archive \
               "${COMMON_ARGS[@]}" \
               CODE_SIGN_STYLE=Manual \
