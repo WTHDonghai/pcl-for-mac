@@ -179,7 +179,7 @@ public enum MinecraftLaunchTask {
     private static func precheck(task: SubTask, model: Model) async throws {
         model.options.manifest = model.manifest
         try model.options.validate()
-        let entries: [LaunchPrecheck.Entry] = LaunchPrecheck.check(for: model.instance, with: model.options, hasMicrosoftAccount: LauncherConfig.shared.hasMicrosoftAccount)
+        let entries: [LaunchPrecheck.Entry] = LaunchPrecheck.check(for: model.instance, with: model.options)
         log("共 \(entries.count) 个问题：\(entries)")
         for entry in entries {
             switch entry {
@@ -190,49 +190,6 @@ public enum MinecraftLaunchTask {
                     level: .error
                 )
                 try task.cancel()
-            case .noMicrosoftAccount:
-                if AccountViewModel().accounts.reduce(false, { $0 || ($1.type == .microsoft) }) {
-                    LauncherConfig.shared.hasMicrosoftAccount = true
-                    continue
-                }
-                // https://github.com/Meloong-Git/PCL/blob/73bdc533097cfd36867b9249416cd681ec0b5a28/Plain%20Craft%20Launcher%202/Modules/Minecraft/ModLaunch.vb#L263-L285
-                if await LocaleUtils.isInChinaMainland(strict: false) {
-                    if [3, 8, 15, 30, 50, 70, 90, 110, 130, 180, 220, 280, 330, 380, 450, 550, 660, 750, 880, 950, 1100, 1300, 1500, 1700, 1900]
-                        .contains(LauncherConfig.shared.launchCount) {
-                        Task {
-                            if await MessageBoxManager.shared.showTextAsync(
-                                title: "考虑一下正版？",
-                                content: "你已经启动了 \(LauncherConfig.shared.launchCount) 次 Minecraft 啦！\n如果觉得 Minecraft 还不错，可以购买正版支持一下，毕竟开发游戏也真的很不容易……不要一直白嫖啦。\n\n在登录一次正版账号后，就不会再出现这个提示了！",
-                                level: .info,
-                                .yes(label: "支持正版游戏！", type: .highlight),
-                                .no(label: "下次一定")
-                            ) == 1 {
-                                NSWorkspace.shared.open(URL(string: "https://www.xbox.com/zh-cn/games/store/minecraft-java-bedrock-edition-for-pc/9nxp44l49shj")!)
-                            }
-                        }
-                    }
-                } else {
-                    let result: Int = await MessageBoxManager.shared.showTextAsync(
-                        title: "正版验证",
-                        content: "你必须先登录正版账号，才能进行离线登录！",
-                        level: .info,
-                        .init(id: 0, label: "购买正版", type: .highlight),
-                        .yes(label: "试玩"),
-                        .init(id: 2, label: "返回", type: .normal)
-                    )
-                    switch result {
-                    case 0:
-                        NSWorkspace.shared.open(URL(string: "https://www.xbox.com/zh-cn/games/store/minecraft-java-bedrock-edition-for-pc/9nxp44l49shj")!)
-                        try task.cancel()
-                    case 1:
-                        hint("游戏将以试玩模式启动！", type: .critical)
-                        model.options.demo = true
-                    case 2:
-                        try task.cancel()
-                    default:
-                        break
-                    }
-                }
             }
         }
     }

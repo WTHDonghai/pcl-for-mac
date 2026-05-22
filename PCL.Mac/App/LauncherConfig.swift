@@ -52,7 +52,6 @@ class LauncherConfig: Codable {
     public var accounts: [Account] = []
     public var currentAccountId: UUID?
     public var multiplayerDisclaimerAgreed: Bool = false
-    public var hasMicrosoftAccount: Bool = false
     public var launchCount: Int = 0
     public var hasEnteredLauncher: Bool = false
     public var multiplayerCustomPeer: String?
@@ -76,7 +75,6 @@ class LauncherConfig: Codable {
             }
         }
         self.multiplayerDisclaimerAgreed = try container.decodeIfPresent(Bool.self, forKey: .multiplayerDisclaimerAgreed) ?? false
-        self.hasMicrosoftAccount = try container.decodeIfPresent(Bool.self, forKey: .hasMicrosoftAccount) ?? false
         self.launchCount = try container.decodeIfPresent(Int.self, forKey: .launchCount) ?? 0
         self.hasEnteredLauncher = try container.decodeIfPresent(Bool.self, forKey: .hasEnteredLauncher) ?? false
         self.multiplayerCustomPeer = try container.decodeIfPresent(String.self, forKey: .multiplayerCustomPeer)
@@ -91,7 +89,6 @@ class LauncherConfig: Codable {
         try container.encode(accounts.map(AccountWrapper.init(_:)), forKey: .accounts)
         try container.encode(currentAccountId, forKey: .currentAccountId)
         try container.encode(multiplayerDisclaimerAgreed, forKey: .multiplayerDisclaimerAgreed)
-        try container.encode(hasMicrosoftAccount, forKey: .hasMicrosoftAccount)
         try container.encode(launchCount, forKey: .launchCount)
         try container.encode(hasEnteredLauncher, forKey: .hasEnteredLauncher)
         try container.encode(multiplayerCustomPeer, forKey: .multiplayerCustomPeer)
@@ -110,7 +107,6 @@ class LauncherConfig: Codable {
         case accounts
         case currentAccountId
         case multiplayerDisclaimerAgreed
-        case hasMicrosoftAccount
         case launchCount
         case hasEnteredLauncher
         case multiplayerCustomPeer
