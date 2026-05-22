@@ -66,8 +66,7 @@ class UpdateService {
             
             hint("正在下载并安装更新，完成后 PCL.Mac 会自动重启……")
             do {
-                let useMirror = await LocaleUtils.isInChinaMainland(strict: false)
-                try await UpdateManager.shared.installUpdate(version, useMirror: useMirror)
+                try await UpdateManager.shared.installUpdate(version, useMirror: false)
             } catch {
                 err("更新启动器失败：\(error.localizedDescription)")
                 hint("更新失败：\(error.localizedDescription)", type: .critical)

@@ -202,24 +202,16 @@ struct MultiplayerPage: View {
     }
     
     private func checkDisclaimer() async throws {
-        if await LocaleUtils.isInChinaMainland(strict: false) == false {
-            MessageBoxManager.shared.showText(
-                title: "不支持的地区",
-                content: "PCL.Mac 目前只支持中国大陆地区。\n如果您在中国大陆，并使用了 VPN 等工具，请先关闭它们，然后再次尝试！",
-                level: .error
-            )
-            throw SimpleError("不支持的地区")
-        }
         if LauncherConfig.shared.multiplayerDisclaimerAgreed { return }
         if await MessageBoxManager.shared.showTextAsync(
-            title: "免责声明",
-            content: "在多人联机过程中，您须严格遵守所在国家和地区的相关法律法规。因违法使用本功能导致的后果将由用户自行承担。\n\n点击“同意”即表示您已阅读并同意上述全部内容。",
+            title: “免责声明”,
+            content: “在多人联机过程中，您须严格遵守所在国家和地区的相关法律法规。因违法使用本功能导致的后果将由用户自行承担。\n\n点击”同意”即表示您已阅读并同意上述全部内容。”,
             level: .info,
-            .no(label: "不同意", type: .red),
-            .yes(label: "同意", type: .highlight)
+            .no(label: “不同意”, type: .red),
+            .yes(label: “同意”, type: .highlight)
         ) == 0 {
             AppRouter.shared.setRoot(.launch)
-            throw SimpleError("用户未同意免责声明")
+            throw SimpleError(“用户未同意免责声明”)
         }
         LauncherConfig.shared.multiplayerDisclaimerAgreed = true
     }
