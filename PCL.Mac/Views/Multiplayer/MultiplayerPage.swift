@@ -89,7 +89,7 @@ struct MultiplayerPage: View {
                             try await checkDisclaimer()
                             guard await MessageBoxManager.shared.showTextAsync(
                                 title: "开启房间",
-                                content: "请按照以下步骤操作：\n   1. 进入世界，按下 ESC\n    2. 点击 "对局域网开放" > "创建局域网世界"\n    3. 回到启动器，点击 "确定" 并输入聊天栏中的端口号",
+                                content: "请按照以下步骤操作：\n   1. 进入世界，按下 ESC\n    2. 点击 \"对局域网开放\" > \"创建局域网世界\"\n    3. 回到启动器，点击 \"确定\" 并输入聊天栏中的端口号",
                                 .no(),
                                 .yes(type: .highlight)
                             ) == 1 else { return }
@@ -114,7 +114,7 @@ struct MultiplayerPage: View {
                                type == .offline {
                                 guard await MessageBoxManager.shared.showTextAsync(
                                     title: "警告",
-                                    content: "你正在使用离线账号，可能会导致无法加入游戏！\n如果房主安装了 LAN Server Properties 等模组，可以忽略此警告。\n如果你拥有正版账号，请返回主页面并切换为正版账号。\n\n如果出现了"无效会话"等错误，请不要反馈给他人！",
+                                    content: "你正在使用离线账号，可能会导致无法加入游戏！\n如果房主安装了 LAN Server Properties 等模组，可以忽略此警告。\n如果你拥有正版账号，请返回主页面并切换为正版账号。\n\n如果出现了\"无效会话\"等错误，请不要反馈给他人！",
                                     level: .error,
                                     .no(),
                                     .yes(label: "继续", type: .red)
@@ -149,7 +149,7 @@ struct MultiplayerPage: View {
                             MyText("你的好友可以通过这个房间码来加入房间！")
                         } else {
                             MyText("本地地址：127.0.0.1:\(room.serverPort)（已自动复制）")
-                            MyText("你可以在游戏中点击 "多人游戏" > "直接连接"，然后输入这个地址来加入游戏！")
+                            MyText("你可以在游戏中点击 \"多人游戏\" > \"直接连接\"，然后输入这个地址来加入游戏！")
                         }
                         Spacer()
                     }
@@ -205,7 +205,7 @@ struct MultiplayerPage: View {
         if LauncherConfig.shared.multiplayerDisclaimerAgreed { return }
         if await MessageBoxManager.shared.showTextAsync(
             title: "免责声明",
-            content: "在多人联机过程中，您须严格遵守所在国家和地区的相关法律法规。因违法使用本功能导致的后果将由用户自行承担。\n\n点击"同意"即表示您已阅读并同意上述全部内容。",
+            content: "在多人联机过程中，您须严格遵守所在国家和地区的相关法律法规。因违法使用本功能导致的后果将由用户自行承担。\n\n点击\"同意\"即表示您已阅读并同意上述全部内容。",
             level: .info,
             .no(label: "不同意", type: .red),
             .yes(label: "同意", type: .highlight)
